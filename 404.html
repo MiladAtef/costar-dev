@@ -27,8 +27,10 @@
     <link href="favicon.png" rel="icon" type="image/png"/>
 
     <!-- Preload splash images with mobile priority -->
-    <link rel="preload" href="assets/assets/images/login_landing_bg.png" as="image" media="(max-width: 768px)">
-    <link rel="preload" href="assets/assets/images/login_web.webp" as="image" media="(min-width: 769px)">
+    <link as="image" href="assets/assets/images/login_landing_bg.png" media="(max-width: 768px)"
+          rel="preload">
+    <link as="image" href="assets/assets/images/login_web.webp" media="(min-width: 769px)"
+          rel="preload">
 
     <title>CO* Travel</title>
     <link href="manifest.json" rel="manifest">
@@ -85,7 +87,7 @@
     <script>
         const serviceWorkerVersion = '{{ flutter_service_worker_version }}';
     </script>
-    
+
     <!-- This script adds the flutter initialization JS code -->
     <script defer src="flutter.js"></script>
     <script>
@@ -110,13 +112,24 @@
         const desktopImg = new Image();
         mobileImg.src = 'assets/assets/images/login_landing_bg.png';
         desktopImg.src = 'assets/assets/images/login_web.webp';
-    }    document.addEventListener('DOMContentLoaded', function() {
-        // Switch to desktop background if on desktop (must run after DOM is ready)
-        if (window.innerWidth > 768) {
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // More robust mobile detection
+        const isMobile = window.innerWidth <= 768 ||
+                         /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+                         ('ontouchstart' in window) ||
+                         (navigator.maxTouchPoints > 0);
+
+        // Only switch to desktop if clearly on desktop
+        if (!isMobile && window.innerWidth > 768) {
             const splashScreen = document.getElementById('splash-screen');
             if (splashScreen) {
                 splashScreen.style.backgroundImage = "url('assets/assets/images/login_web.webp')";
+                console.log('Switched to desktop background');
             }
+        } else {
+            console.log('Keeping mobile background, isMobile:', isMobile, 'width:', window.innerWidth);
         }
 
         preloadImages();
@@ -155,7 +168,7 @@
 <script defer src="assets/packages/vad/assets/ort.js"></script>
 <script defer src="assets/packages/vad/assets/bundle.min.js"></script>
 <script defer src="assets/packages/vad/assets/vad_web.js"></script>
-<script async src="flutter_bootstrap.js?v=85"></script>
+<script async src="flutter_bootstrap.js?v=86"></script>
 </body>
 
 </html>
