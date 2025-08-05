@@ -56,7 +56,15 @@
             background-attachment: fixed;
             transition: opacity 0.5s ease-in-out;
             overflow: hidden;
-            /* Background will be set by JavaScript immediately */
+            /* Default for desktop */
+            background-image: url('assets/assets/images/login_web.webp');
+        }
+
+        /* Mobile override */
+        @media (max-width: 768px) {
+            #splash-screen {
+                background-image: url('assets/assets/images/login_landing_bg.png');
+            }
         }
 
         #loading-text {
@@ -102,26 +110,6 @@
         const serviceWorkerVersion = '{{ flutter_service_worker_version }}';
     </script>
     
-    <!-- Set splash screen background immediately based on screen size -->
-    <script>
-        (function() {
-            // This runs immediately to prevent flash
-            const isMobile = window.innerWidth <= 768;
-            const backgroundImage = isMobile 
-                ? "url('assets/assets/images/login_landing_bg.png')"
-                : "url('assets/assets/images/login_web.webp')";
-            
-            // Add CSS rule immediately
-            const style = document.createElement('style');
-            style.textContent = `
-                #splash-screen {
-                    background-image: ${backgroundImage} !important;
-                }
-            `;
-            document.head.appendChild(style);
-        })();
-    </script>
-    
     <!-- This script adds the flutter initialization JS code -->
     <script defer src="flutter.js"></script>
     <script>
@@ -163,18 +151,6 @@
 
         window.addEventListener('flutter-first-frame', hideSplashScreen);
 
-        // Handle orientation changes on mobile
-        window.addEventListener('resize', function() {
-            const splashScreen = document.getElementById('splash-screen');
-            if (splashScreen) {
-                const isMobile = window.innerWidth <= 768;
-                const backgroundImage = isMobile 
-                    ? "url('assets/assets/images/login_landing_bg.png')"
-                    : "url('assets/assets/images/login_web.webp')";
-                splashScreen.style.backgroundImage = backgroundImage;
-            }
-        });
-
         setTimeout(hideSplashScreen, 10000);
     });
     </script>
@@ -189,7 +165,7 @@
 <script defer src="assets/packages/vad/assets/ort.js"></script>
 <script defer src="assets/packages/vad/assets/bundle.min.js"></script>
 <script defer src="assets/packages/vad/assets/vad_web.js"></script>
-<script async src="flutter_bootstrap.js?v=81"></script>
+<script async src="flutter_bootstrap.js?v=82"></script>
 </body>
 
 </html>
