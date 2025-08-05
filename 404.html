@@ -43,34 +43,6 @@
             -ms-text-size-adjust: 100%;
         }
 
-        #splash-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            height: -webkit-fill-available;
-            z-index: 9999;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-size: cover;
-            background-position: center center;
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-            transition: opacity 0.5s ease-in-out;
-            overflow: hidden;
-            /* Mobile first - default to mobile background */
-            background-image: url('assets/assets/images/login_landing_bg.png');
-        }
-
-        /* Desktop override - only apply on larger screens */
-        @media (min-width: 769px) {
-            #splash-screen {
-                background-image: url('assets/assets/images/login_web.webp');
-            }
-        }
-
         #loading-text {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             font-size: 3rem;
@@ -114,6 +86,26 @@
         const serviceWorkerVersion = '{{ flutter_service_worker_version }}';
     </script>
     
+    <!-- Immediately switch to desktop background if on desktop -->
+    <script>
+        (function() {
+            // Only run this on desktop screens
+            if (window.innerWidth > 768) {
+                // Use requestAnimationFrame to ensure DOM is ready
+                function switchToDesktop() {
+                    const splashScreen = document.getElementById('splash-screen');
+                    if (splashScreen) {
+                        splashScreen.style.backgroundImage = "url('assets/assets/images/login_web.webp')";
+                    } else {
+                        // If element not ready, try again on next frame
+                        requestAnimationFrame(switchToDesktop);
+                    }
+                }
+                requestAnimationFrame(switchToDesktop);
+            }
+        })();
+    </script>
+    
     <!-- This script adds the flutter initialization JS code -->
     <script defer src="flutter.js"></script>
     <script>
@@ -138,9 +130,7 @@
         const desktopImg = new Image();
         mobileImg.src = 'assets/assets/images/login_landing_bg.png';
         desktopImg.src = 'assets/assets/images/login_web.webp';
-    }
-
-    document.addEventListener('DOMContentLoaded', function() {
+    }    document.addEventListener('DOMContentLoaded', function() {
         preloadImages();
 
         window.addEventListener('flutter-first-frame', hideSplashScreen);
@@ -151,15 +141,33 @@
 </head>
 
 <body>
-<!-- Splash Screen -->
-<div id="splash-screen">
+<!-- Splash Screen with inline mobile-first styling to prevent any flash -->
+<div id="splash-screen" style="
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    height: -webkit-fill-available;
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image: url('assets/assets/images/login_landing_bg.png');
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    transition: opacity 0.5s ease-in-out;
+    overflow: hidden;
+">
     <div id="loading-text">LOADING...</div>
 </div>
 
 <script defer src="assets/packages/vad/assets/ort.js"></script>
 <script defer src="assets/packages/vad/assets/bundle.min.js"></script>
 <script defer src="assets/packages/vad/assets/vad_web.js"></script>
-<script async src="flutter_bootstrap.js?v=83"></script>
+<script async src="flutter_bootstrap.js?v=84"></script>
 </body>
 
 </html>
