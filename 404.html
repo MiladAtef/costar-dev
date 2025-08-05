@@ -10,7 +10,7 @@
     <meta content="CoStar Travel" name="description">
 
     <meta content="173702795602-9f1m0hd81bu18ai40katllskihaimlve.apps.googleusercontent.com"
-        name="google-signin-client_id">
+          name="google-signin-client_id">
 
     <!-- iOS meta tags & icons -->
     <meta content="yes" name="apple-mobile-web-app-capable">
@@ -24,10 +24,85 @@
     <meta content="transparent" name="theme-color">
 
     <!-- Favicon -->
-    <link href="favicon.png" rel="icon" type="image/png" />
+    <link href="favicon.png" rel="icon" type="image/png"/>
 
     <title>CO* Travel</title>
     <link href="manifest.json" rel="manifest">
+
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+        }
+
+        #splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            height: -webkit-fill-available;
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-image: url('assets/assets/images/login_landing_bg.png');
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            transition: opacity 0.5s ease-in-out;
+            overflow: hidden;
+        }
+
+        @media (min-width: 769px) {
+            #splash-screen {
+                background-image: url('assets/assets/images/login_web.webp');
+            }
+        }
+
+        #loading-text {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            font-size: 3rem;
+            font-weight: bold;
+            color: #616161;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            letter-spacing: 0.2em;
+            animation: pulse 1.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes pulse {
+            from {
+                opacity: 0.7;
+                transform: scale(1);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1.05);
+            }
+        }
+
+        @media (max-width: 768px) {
+            #loading-text {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            #loading-text {
+                font-size: 1.5rem;
+            }
+        }
+
+        .hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+    </style>
 
     <script>
         const serviceWorkerVersion = '{{ flutter_service_worker_version }}';
@@ -38,14 +113,44 @@
         document.addEventListener('contextmenu', (e) => {
             e.preventDefault();
         });
+
+    function hideSplashScreen() {
+        const splashScreen = document.getElementById('splash-screen');
+        if (splashScreen) {
+            splashScreen.classList.add('hidden');
+            setTimeout(() => {
+                splashScreen.remove();
+            }, 500); // Wait for transition to finish
+        }
+    }
+
+    function preloadImages() {
+        const desktopImg = new Image();
+        const mobileImg = new Image();
+        desktopImg.src = 'assets/assets/images/login_web.webp';
+        mobileImg.src = 'assets/assets/images/login_landing_bg.png';
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        preloadImages();
+
+        window.addEventListener('flutter-first-frame', hideSplashScreen);
+
+        setTimeout(hideSplashScreen, 10000);
+    });
     </script>
 </head>
 
 <body>
-    <script defer src="assets/packages/vad/assets/ort.js"></script>
-    <script defer src="assets/packages/vad/assets/bundle.min.js"></script>
-    <script defer src="assets/packages/vad/assets/vad_web.js"></script>
-    <script async src="flutter_bootstrap.js"></script>
+<!-- Splash Screen -->
+<div id="splash-screen">
+    <div id="loading-text">LOADING...</div>
+</div>
+
+<script defer src="assets/packages/vad/assets/ort.js"></script>
+<script defer src="assets/packages/vad/assets/bundle.min.js"></script>
+<script defer src="assets/packages/vad/assets/vad_web.js"></script>
+<script async src="flutter_bootstrap.js?v=78"></script>
 </body>
 
 </html>
