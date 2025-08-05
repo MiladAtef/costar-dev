@@ -86,26 +86,6 @@
         const serviceWorkerVersion = '{{ flutter_service_worker_version }}';
     </script>
     
-    <!-- Immediately switch to desktop background if on desktop -->
-    <script>
-        (function() {
-            // Only run this on desktop screens
-            if (window.innerWidth > 768) {
-                // Use requestAnimationFrame to ensure DOM is ready
-                function switchToDesktop() {
-                    const splashScreen = document.getElementById('splash-screen');
-                    if (splashScreen) {
-                        splashScreen.style.backgroundImage = "url('assets/assets/images/login_web.webp')";
-                    } else {
-                        // If element not ready, try again on next frame
-                        requestAnimationFrame(switchToDesktop);
-                    }
-                }
-                requestAnimationFrame(switchToDesktop);
-            }
-        })();
-    </script>
-    
     <!-- This script adds the flutter initialization JS code -->
     <script defer src="flutter.js"></script>
     <script>
@@ -131,6 +111,14 @@
         mobileImg.src = 'assets/assets/images/login_landing_bg.png';
         desktopImg.src = 'assets/assets/images/login_web.webp';
     }    document.addEventListener('DOMContentLoaded', function() {
+        // Switch to desktop background if on desktop (must run after DOM is ready)
+        if (window.innerWidth > 768) {
+            const splashScreen = document.getElementById('splash-screen');
+            if (splashScreen) {
+                splashScreen.style.backgroundImage = "url('assets/assets/images/login_web.webp')";
+            }
+        }
+
         preloadImages();
 
         window.addEventListener('flutter-first-frame', hideSplashScreen);
@@ -167,7 +155,7 @@
 <script defer src="assets/packages/vad/assets/ort.js"></script>
 <script defer src="assets/packages/vad/assets/bundle.min.js"></script>
 <script defer src="assets/packages/vad/assets/vad_web.js"></script>
-<script async src="flutter_bootstrap.js?v=84"></script>
+<script async src="flutter_bootstrap.js?v=85"></script>
 </body>
 
 </html>
