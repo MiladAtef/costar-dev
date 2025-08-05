@@ -50,42 +50,20 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background-color: #000000; /* Mobile-first: black background */
             background-size: cover;
             background-position: center center;
             background-repeat: no-repeat;
-            background-attachment: scroll; /* Better for mobile */
+            background-attachment: fixed;
             transition: opacity 0.5s ease-in-out;
             overflow: hidden;
+            /* Mobile first - default to mobile background */
+            background-image: url('assets/assets/images/login_landing_bg.png');
         }
 
+        /* Only apply desktop background on larger screens */
         @media (min-width: 769px) {
             #splash-screen {
                 background-image: url('assets/assets/images/login_web.webp');
-                background-color: #f5f5f5; /* Desktop background color */
-                background-attachment: fixed;
-            }
-        }
-
-        /* Mobile styles */
-        #splash-logo {
-            max-width: 200px;
-            max-height: 100px;
-            display: block; /* Show logo on mobile by default */
-        }
-
-        @media (min-width: 769px) {
-            #splash-logo {
-                display: none; /* Hide logo on desktop */
-            }
-        }
-
-        @media (max-width: 768px) {
-            #splash-screen {
-                flex-direction: column; /* Stack logo and text vertically */
-            }
-            #loading-text {
-                display: none; /* Hide loading text on mobile */
             }
         }
 
@@ -149,21 +127,22 @@
     }
 
     function preloadImages() {
+        // Detect if we're on mobile to prioritize the correct image
         const isMobile = window.innerWidth <= 768;
-
+        
         if (isMobile) {
-            // On mobile, load and show the logo
-            const logoImg = new Image();
-            logoImg.onload = () => {
-                const logo = document.getElementById('splash-logo');
-                if (logo) {
-                    logo.src = logoImg.src;
-                    logo.style.opacity = '1';
-                }
-            };
-            logoImg.src = 'assets/assets/images/co_star_logo_light.png';
+            // On mobile, prioritize mobile image first
+            const mobileImg = new Image();
+            const desktopImg = new Image();
+            mobileImg.src = 'assets/assets/images/login_landing_bg.png';
+            desktopImg.src = 'assets/assets/images/login_web.webp';
+        } else {
+            // On desktop, prioritize desktop image first
+            const desktopImg = new Image();
+            const mobileImg = new Image();
+            desktopImg.src = 'assets/assets/images/login_web.webp';
+            mobileImg.src = 'assets/assets/images/login_landing_bg.png';
         }
-        // On desktop, the background image is already set via CSS
     }
 
     document.addEventListener('DOMContentLoaded', function() {
@@ -179,14 +158,13 @@
 <body>
 <!-- Splash Screen -->
 <div id="splash-screen">
-    <img alt="CO* Travel" id="splash-logo" src="" style="opacity: 0;">
     <div id="loading-text">LOADING...</div>
 </div>
 
 <script defer src="assets/packages/vad/assets/ort.js"></script>
 <script defer src="assets/packages/vad/assets/bundle.min.js"></script>
 <script defer src="assets/packages/vad/assets/vad_web.js"></script>
-<script async src="flutter_bootstrap.js?v=79"></script>
+<script async src="flutter_bootstrap.js?v=80"></script>
 </body>
 
 </html>
