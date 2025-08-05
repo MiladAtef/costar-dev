@@ -26,6 +26,10 @@
     <!-- Favicon -->
     <link href="favicon.png" rel="icon" type="image/png"/>
 
+    <!-- Preload splash images with mobile priority -->
+    <link rel="preload" href="assets/assets/images/login_landing_bg.png" as="image" media="(max-width: 768px)">
+    <link rel="preload" href="assets/assets/images/login_web.webp" as="image" media="(min-width: 769px)">
+
     <title>CO* Travel</title>
     <link href="manifest.json" rel="manifest">
 
@@ -56,14 +60,14 @@
             background-attachment: fixed;
             transition: opacity 0.5s ease-in-out;
             overflow: hidden;
-            /* Default for desktop */
-            background-image: url('assets/assets/images/login_web.webp');
+            /* Mobile first - default to mobile background */
+            background-image: url('assets/assets/images/login_landing_bg.png');
         }
 
-        /* Mobile override */
-        @media (max-width: 768px) {
+        /* Desktop override - only apply on larger screens */
+        @media (min-width: 769px) {
             #splash-screen {
-                background-image: url('assets/assets/images/login_landing_bg.png');
+                background-image: url('assets/assets/images/login_web.webp');
             }
         }
 
@@ -128,22 +132,12 @@
     }
 
     function preloadImages() {
-        // Detect if we're on mobile to prioritize the correct image
-        const isMobile = window.innerWidth <= 768;
-        
-        if (isMobile) {
-            // On mobile, prioritize mobile image first
-            const mobileImg = new Image();
-            const desktopImg = new Image();
-            mobileImg.src = 'assets/assets/images/login_landing_bg.png';
-            desktopImg.src = 'assets/assets/images/login_web.webp';
-        } else {
-            // On desktop, prioritize desktop image first
-            const desktopImg = new Image();
-            const mobileImg = new Image();
-            desktopImg.src = 'assets/assets/images/login_web.webp';
-            mobileImg.src = 'assets/assets/images/login_landing_bg.png';
-        }
+        // Images are now preloaded via link tags in head
+        // This function kept for compatibility but simplified
+        const mobileImg = new Image();
+        const desktopImg = new Image();
+        mobileImg.src = 'assets/assets/images/login_landing_bg.png';
+        desktopImg.src = 'assets/assets/images/login_web.webp';
     }
 
     document.addEventListener('DOMContentLoaded', function() {
@@ -165,7 +159,7 @@
 <script defer src="assets/packages/vad/assets/ort.js"></script>
 <script defer src="assets/packages/vad/assets/bundle.min.js"></script>
 <script defer src="assets/packages/vad/assets/vad_web.js"></script>
-<script async src="flutter_bootstrap.js?v=82"></script>
+<script async src="flutter_bootstrap.js?v=83"></script>
 </body>
 
 </html>
