@@ -10,7 +10,7 @@
     <meta content="CoStar Travel" name="description">
 
     <meta content="173702795602-9f1m0hd81bu18ai40katllskihaimlve.apps.googleusercontent.com"
-          name="google-signin-client_id">
+        name="google-signin-client_id">
 
     <!-- iOS meta tags & icons -->
     <meta content="yes" name="apple-mobile-web-app-capable">
@@ -24,19 +24,18 @@
     <meta content="transparent" name="theme-color">
 
     <!-- Favicon -->
-    <link href="favicon.png" rel="icon" type="image/png"/>
+    <link href="favicon.png" rel="icon" type="image/png" />
 
     <!-- Preload splash images with mobile priority -->
-    <link as="image" href="assets/assets/images/login_landing_bg.png" media="(max-width: 768px)"
-          rel="preload">
-    <link as="image" href="assets/assets/images/login_web.webp" media="(min-width: 769px)"
-          rel="preload">
+    <link as="image" href="assets/assets/images/login_landing_bg.png" media="(max-width: 768px)" rel="preload">
+    <link as="image" href="assets/assets/images/login_web.webp" media="(min-width: 769px)" rel="preload">
 
     <title>CO* Travel</title>
     <link href="manifest.json" rel="manifest">
 
     <style>
-        body, html {
+        body,
+        html {
             margin: 0;
             padding: 0;
             height: 100%;
@@ -45,14 +44,33 @@
             -ms-text-size-adjust: 100%;
         }
 
-        #loading-text {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            font-size: 3rem;
-            font-weight: bold;
-            color: #616161;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-            letter-spacing: 0.2em;
-            animation: pulse 1.5s ease-in-out infinite alternate;
+        .loading-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #splash-logo {
+            width: 180px;
+            margin-bottom: 1.75rem;
+        }
+
+        .loading-bar-container {
+            width: 180px;
+            height: 2px;
+            background-color: #e0e0e0;
+            border-radius: 1px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        .loading-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #333333, #666666, #333333);
+            background-size: 200% 100%;
+            animation: loadingProgress 2s ease-in-out infinite;
+            border-radius: 1px;
         }
 
         @keyframes pulse {
@@ -60,21 +78,51 @@
                 opacity: 0.7;
                 transform: scale(1);
             }
+
             to {
                 opacity: 1;
                 transform: scale(1.05);
             }
         }
 
+        @keyframes loadingProgress {
+            0% {
+                width: 0%;
+                background-position: 200% 0;
+            }
+
+            50% {
+                width: 80%;
+                background-position: 0% 0;
+            }
+
+            100% {
+                width: 100%;
+                background-position: -200% 0;
+            }
+        }
+
         @media (max-width: 768px) {
-            #loading-text {
-                font-size: 2rem;
+            #splash-logo {
+                width: 140px;
+                margin-bottom: 1.75rem;
+            }
+
+            .loading-bar-container {
+                width: 140px;
+                height: 2px;
             }
         }
 
         @media (max-width: 480px) {
-            #loading-text {
-                font-size: 1.5rem;
+            #splash-logo {
+                width: 140px;
+                margin-bottom: 1.5rem;
+            }
+
+            .loading-bar-container {
+                width: 120px;
+                height: 1.5px;
             }
         }
 
@@ -95,55 +143,55 @@
             e.preventDefault();
         });
 
-    function hideSplashScreen() {
-        const splashScreen = document.getElementById('splash-screen');
-        if (splashScreen) {
-            splashScreen.classList.add('hidden');
-            setTimeout(() => {
-                splashScreen.remove();
-            }, 500); // Wait for transition to finish
-        }
-    }
-
-    function preloadImages() {
-        // Images are now preloaded via link tags in head
-        // This function kept for compatibility but simplified
-        const mobileImg = new Image();
-        const desktopImg = new Image();
-        mobileImg.src = 'assets/assets/images/login_landing_bg.png';
-        desktopImg.src = 'assets/assets/images/login_web.webp';
-    }
-
-    document.addEventListener('DOMContentLoaded', function() {
-        // More robust mobile detection
-        const isMobile = window.innerWidth <= 768 ||
-                         /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
-                         ('ontouchstart' in window) ||
-                         (navigator.maxTouchPoints > 0);
-
-        // Only switch to desktop if clearly on desktop
-        if (!isMobile && window.innerWidth > 768) {
+        function hideSplashScreen() {
             const splashScreen = document.getElementById('splash-screen');
             if (splashScreen) {
-                splashScreen.style.backgroundImage = "url('assets/assets/images/login_web.webp')";
-                console.log('Switched to desktop background');
+                splashScreen.classList.add('hidden');
+                setTimeout(() => {
+                    splashScreen.remove();
+                }, 500); // Wait for transition to finish
             }
-        } else {
-            console.log('Keeping mobile background, isMobile:', isMobile, 'width:', window.innerWidth);
         }
 
-        preloadImages();
+        function preloadImages() {
+            // Images are now preloaded via link tags in head
+            // This function kept for compatibility but simplified
+            const mobileImg = new Image();
+            const desktopImg = new Image();
+            mobileImg.src = 'assets/assets/images/login_landing_bg.png';
+            desktopImg.src = 'assets/assets/images/login_web.webp';
+        }
 
-        window.addEventListener('flutter-first-frame', hideSplashScreen);
+        document.addEventListener('DOMContentLoaded', function () {
+            // More robust mobile detection
+            const isMobile = window.innerWidth <= 768 ||
+                /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+                ('ontouchstart' in window) ||
+                (navigator.maxTouchPoints > 0);
 
-        setTimeout(hideSplashScreen, 10000);
-    });
+            // Only switch to desktop if clearly on desktop
+            if (!isMobile && window.innerWidth > 768) {
+                const splashScreen = document.getElementById('splash-screen');
+                if (splashScreen) {
+                    splashScreen.style.backgroundImage = "url('assets/assets/images/login_web.webp')";
+                    console.log('Switched to desktop background');
+                }
+            } else {
+                console.log('Keeping mobile background, isMobile:', isMobile, 'width:', window.innerWidth);
+            }
+
+            preloadImages();
+
+            window.addEventListener('flutter-first-frame', hideSplashScreen);
+
+            setTimeout(hideSplashScreen, 10000);
+        });
     </script>
 </head>
 
 <body>
-<!-- Splash Screen with inline mobile-first styling to prevent any flash -->
-<div id="splash-screen" style="
+    <!-- Splash Screen with inline mobile-first styling to prevent any flash -->
+    <div id="splash-screen" style="
     position: fixed;
     top: 0;
     left: 0;
@@ -162,13 +210,18 @@
     transition: opacity 0.5s ease-in-out;
     overflow: hidden;
 ">
-    <div id="loading-text">LOADING...</div>
-</div>
+        <div class="loading-container">
+            <img alt="CoStar Travel Logo" id="splash-logo" src="assets/assets/images/splash_logo.svg" />
+            <div class="loading-bar-container">
+                <div class="loading-bar"></div>
+            </div>
+        </div>
+    </div>
 
-<script defer src="assets/packages/vad/assets/ort.js"></script>
-<script defer src="assets/packages/vad/assets/bundle.min.js"></script>
-<script defer src="assets/packages/vad/assets/vad_web.js"></script>
-<script async src="flutter_bootstrap.js?v=86"></script>
+    <script defer src="assets/packages/vad/assets/ort.js"></script>
+    <script defer src="assets/packages/vad/assets/bundle.min.js"></script>
+    <script defer src="assets/packages/vad/assets/vad_web.js"></script>
+    <script async src="flutter_bootstrap.js?v=103"></script>
 </body>
 
 </html>
